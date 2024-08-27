@@ -1,5 +1,7 @@
-﻿using ApiMvc.Service;
+﻿using ApiMvc.Controllers.Exceptions;
+using ApiMvc.Service;
 using ApiMvc.Service.Dtos.Fabricante;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiMvc.Controllers
@@ -17,16 +19,20 @@ namespace ApiMvc.Controllers
 
         // GET: api/FabricanteDtoes
         [HttpGet]
-        public async Task<IEnumerable<FabricanteSmallDto>> GetFabricanteDto()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteSmallDto))]
+        public async Task<IEnumerable<FabricanteSmallDto>> GetFabricante()
         {
-          return await _fabricanteService.FindAllAsync();
+            return await _fabricanteService.FindAllAsync();
         }
 
         // GET: api/FabricanteDtoes/5
         [HttpGet("{id}")]
-        public async Task<FabricanteDto?> GetFabricanteDto(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
+        public async Task<Results<NotFound,Ok<FabricanteDto>>> GetFabricante(int id)
         {
-            return await _fabricanteService.FindByIdAsync(id);
+            var response = await _fabricanteService.FindByIdAsync(id);
+            return TypedResults.Ok(response);
         }
     }
 }

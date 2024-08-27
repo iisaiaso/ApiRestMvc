@@ -1,3 +1,4 @@
+using ApiMvc.Controllers.Middlewares;
 using ApiMvc.Models.Cores.Context;
 using ApiMvc.Service.Cores.Context;
 using System.Reflection;
@@ -17,6 +18,8 @@ builder.Services.addDataAcces(builder.Configuration, Assembly.GetExecutingAssemb
 // Business Logic
 builder.Services.addBusinessLogic(Assembly.GetExecutingAssembly());
 
+// API
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 var app = builder.Build();
 
@@ -26,6 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

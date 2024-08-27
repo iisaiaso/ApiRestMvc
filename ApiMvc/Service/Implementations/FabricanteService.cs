@@ -1,6 +1,7 @@
 ﻿using ApiMvc.Models;
 using ApiMvc.Models.Contracts;
 using ApiMvc.Models.Entity;
+using ApiMvc.Service.Cores.Exceptions;
 using ApiMvc.Service.Dtos.Fabricante;
 
 namespace ApiMvc.Service.Implementations
@@ -27,30 +28,30 @@ namespace ApiMvc.Service.Implementations
             return smallDto;
         }
 
-        public async Task<FabricanteDto?> FindByIdAsync(int id)
+        public async Task<FabricanteDto> FindByIdAsync(int id)
         {
             Fabricante? fabricante = await _fabricanteRepository.FindByIdAsync(id);
 
-            if (fabricante != null) 
+            if (fabricante is null) throw FabricanteNotFound(id);
+
+            FabricanteDto fabricanteDto = new FabricanteDto
             {
-                FabricanteDto fabricanteDto = new FabricanteDto
+                Id = fabricante.Id,
+                Nombre = fabricante.Nombre,
+                Productos = fabricante.Productos?.Select(producto => new ProductoSmallDto
                 {
-                    Id = fabricante.Id,
-                    Nombre = fabricante.Nombre,
-                    Productos = fabricante.Productos?.Select(producto => new ProductoSmallDto
-                    {
-                        Id = producto.Id,
-                        Nombre = producto.Nombre
-                    }).ToList() ?? new List<ProductoSmallDto>()
-                };
-                return fabricanteDto;
-            }
-                FabricanteNotFound(id);
-                return null;
+                    Id = producto.Id,
+                    Nombre = producto.Nombre
+                }).ToList() ?? new List<ProductoSmallDto>()
+            };
+
+            return fabricanteDto;
+
         }
-        private Exception FabricanteNotFound(int id)
+
+        private NotFoundCoreException FabricanteNotFound(int id)
         {
-            throw new InvalidOperationException("Fabricante no encontado para el id:" + id);
+            return new NotFoundCoreException("Fabricante no encontado para el id:" + id);
         }
     }
 }
