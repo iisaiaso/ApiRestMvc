@@ -1,51 +1,44 @@
-﻿using ApiMvc.Models;
-using ApiMvc.Models.Contracts;
+﻿using ApiMvc.Models.Contracts;
 using ApiMvc.Models.Entity;
 using ApiMvc.Service.Cores.Exceptions;
-using ApiMvc.Service.Dtos.Fabricante;
+using ApiMvc.Service.Dtos.Fabricantes;
+using ApiMvc.Service.Dtos.Productos;
+using AutoMapper;
 
 namespace ApiMvc.Service.Implementations
 {
     public class FabricanteService : IFabricanteService
     {
         private readonly IFabricanteRepository _fabricanteRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<FabricanteService> _logger;
 
-        public FabricanteService(IFabricanteRepository fabricanteRepository)
+        public FabricanteService(IFabricanteRepository fabricanteRepository, IMapper mapper, ILogger<FabricanteService> logger)
         {
             _fabricanteRepository = fabricanteRepository;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IReadOnlyList<FabricanteSmallDto>> FindAllAsync()
         {
-            var fabricante = await _fabricanteRepository.FindAllAsync();
+            IReadOnlyList<Fabricante> fabricante = await _fabricanteRepository.FindAllAsync();
 
-            var smallDto = fabricante.Select(x => new FabricanteSmallDto
-            {
-                Id = x.Id,
-                Nombre = x.Nombre,
-            }).ToList();
-
-            return smallDto;
+            return _mapper.Map<IReadOnlyList<FabricanteSmallDto>>(fabricante);
         }
 
         public async Task<FabricanteDto> FindByIdAsync(int id)
         {
             Fabricante? fabricante = await _fabricanteRepository.FindByIdAsync(id);
 
-            if (fabricante is null) throw FabricanteNotFound(id);
-
-            FabricanteDto fabricanteDto = new FabricanteDto
+            if (fabricante is null)
             {
-                Id = fabricante.Id,
-                Nombre = fabricante.Nombre,
-                Productos = fabricante.Productos?.Select(producto => new ProductoSmallDto
-                {
-                    Id = producto.Id,
-                    Nombre = producto.Nombre
-                }).ToList() ?? new List<ProductoSmallDto>()
-            };
+               // _logger.LogWarning("Fabricante no encontrado para el id:" + id);
+                throw FabricanteNotFound(id);
+            }
 
-            return fabricanteDto;
+            _logger.LogInformation("Fabricante {nombre}"+fabricante.Nombre);
+            return _mapper.Map<FabricanteDto>(fabricante);
 
         }
 

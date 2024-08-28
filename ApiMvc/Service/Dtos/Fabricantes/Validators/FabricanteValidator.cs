@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ApiMvc.Service.Dtos.Fabricante.Validators
+namespace ApiMvc.Service.Dtos.Fabricantes.Validators
 {
     public class FabricanteValidator : AbstractValidator<FabricanteSaveDto>
     {

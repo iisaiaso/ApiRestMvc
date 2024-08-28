@@ -1,7 +1,7 @@
 ﻿using ApiMvc.Controllers.Exceptions;
 using ApiMvc.Models;
 using ApiMvc.Service;
-using ApiMvc.Service.Dtos.Producto;
+using ApiMvc.Service.Dtos.Productos;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,6 @@
 ﻿using ApiMvc.Controllers.Exceptions;
 using ApiMvc.Service;
-using ApiMvc.Service.Dtos.Fabricante;
+using ApiMvc.Service.Dtos.Fabricantes;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

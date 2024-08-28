@@ -1,7 +1,7 @@
-﻿
+﻿using ApiMvc.Service.Dtos.Productos;
 using FluentValidation;
 
-namespace ApiMvc.Service.Dtos.Producto.Validators
+namespace ApiMvc.Service.Dtos.Productos.Validators
 {
     public class ProductoValidator : AbstractValidator<ProductoSaveDto>
     {

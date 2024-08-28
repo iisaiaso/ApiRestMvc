@@ -1,5 +1,5 @@
 ﻿using ApiMvc.Service.Cores.Services;
-using ApiMvc.Service.Dtos.Fabricante;
+using ApiMvc.Service.Dtos.Fabricantes;
 
 namespace ApiMvc.Service
 {

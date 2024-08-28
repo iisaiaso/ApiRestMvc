@@ -1,5 +1,4 @@
-﻿using ApiMvc.Service.Implementations;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ApiMvc.Service.Cores.Context
 {
@@ -7,6 +6,7 @@ namespace ApiMvc.Service.Cores.Context
     {
         public static IServiceCollection addBusinessLogic(this IServiceCollection services, Assembly assembly)
         {
+            services.AddAutoMapper(assembly);
             // Registrar Service y su implementación
            // services.AddScoped<IProductoService, ProductoService>();
             //services.AddScoped<IFabricanteService, FabricanteService>();

@@ -1,6 +1,6 @@
 ﻿using ApiMvc.Models.Cores.Model;
 
-namespace ApiMvc.Service.Dtos.Fabricante
+namespace ApiMvc.Service.Dtos.Fabricantes
 {
     public class FabricanteSmallDto : CoreModel
     {

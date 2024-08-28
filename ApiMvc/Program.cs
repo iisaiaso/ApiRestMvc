@@ -2,9 +2,22 @@ using ApiMvc.Controllers.Filters;
 using ApiMvc.Controllers.Middlewares;
 using ApiMvc.Models.Cores.Context;
 using ApiMvc.Service.Cores.Context;
+using Serilog;
+using Serilog.Events;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+// Configurar Serilog
+var logger = new LoggerConfiguration()
+    .WriteTo.Console(LogEventLevel.Information)
+    .WriteTo.File(
+        ".." + Path.DirectorySeparatorChar + "logapi.log",
+         LogEventLevel.Warning,
+         rollingInterval: RollingInterval.Day
+    )
+    .CreateLogger();
+
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 builder.Services.AddControllers(options =>
@@ -36,6 +49,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

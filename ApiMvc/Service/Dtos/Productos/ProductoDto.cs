@@ -1,7 +1,7 @@
 ﻿using ApiMvc.Models.Cores.Model;
-using ApiMvc.Service.Dtos.Fabricante;
+using ApiMvc.Service.Dtos.Fabricantes;
 
-namespace ApiMvc.Models
+namespace ApiMvc.Service.Dtos.Productos
 {
     public class ProductoDto : CoreModel
     {

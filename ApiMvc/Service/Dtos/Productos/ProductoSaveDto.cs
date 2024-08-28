@@ -1,4 +1,4 @@
-﻿namespace ApiMvc.Service.Dtos.Producto
+﻿namespace ApiMvc.Service.Dtos.Productos
 {
     public class ProductoSaveDto
 

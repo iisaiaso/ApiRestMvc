@@ -1,6 +1,5 @@
 ﻿using ApiMvc.Models.Entity;
 using Microsoft.EntityFrameworkCore;
-using ApiMvc.Service.Dtos.Fabricante;
 using System.Reflection;
 
 namespace ApiMvc.Models.Cores.Context
@@ -25,13 +24,12 @@ namespace ApiMvc.Models.Cores.Context
 
             base.OnModelCreating(modelBuilder);
 
-            // Registrar todas las entidades en el ensamblado actual
+            // Registrar todas las entidades del DbSet en el ensamblado actual
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         //public DbSet<Producto> Producto { get; set; }
         //public DbSet<Fabricante> Fabricante { get; set; }
 
-        public DbSet<ApiMvc.Service.Dtos.Fabricante.FabricanteDto> FabricanteDto { get; set; } = default!;
     }
 }

@@ -1,7 +1,4 @@
-﻿using ApiMvc.Models;
-using ApiMvc.Service.Dtos.Producto;
-
-namespace ApiMvc.Service.Cores.Services
+﻿namespace ApiMvc.Service.Cores.Services
 {
     public interface ISaveService<TDto,TSaveDto,TSmallDto, ID>
     {

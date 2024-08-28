@@ -1,16 +1,16 @@
 ﻿
 using ApiMvc.Controllers.Exceptions;
 using ApiMvc.Service.Cores.Exceptions;
-using Newtonsoft.Json;
 using System.Net;
 
 namespace ApiMvc.Controllers.Middlewares
 {
     public class ExceptionMiddleware : IMiddleware
     {
-        public ExceptionMiddleware()
+        private readonly ILogger<ExceptionMiddleware> _logger;
+        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
         {
-            
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -19,7 +19,7 @@ namespace ApiMvc.Controllers.Middlewares
             {
                 await next(context);
             }
-            catch (Exception exception) 
+            catch (Exception exception)
             {
                 var errorResult = new ErrorModel();
                 HttpStatusCode statusCode;
@@ -27,11 +27,13 @@ namespace ApiMvc.Controllers.Middlewares
                 switch (exception)
                 {
                     case NotFoundCoreException e:
+                        _logger.LogWarning("NotFoundCoreException:: {exception}", exception.Message);
                         statusCode = HttpStatusCode.NotFound;
                         errorResult.Message = e.Message;
                         break;
 
                     default:
+                        _logger.LogError("Exception:: {exception}", exception.Message);
                         statusCode = HttpStatusCode.InternalServerError;
                         errorResult.Message = "Se ha producido un error inesperado";
                         break;
@@ -39,7 +41,7 @@ namespace ApiMvc.Controllers.Middlewares
 
                 var response = context.Response;
 
-                if (!response.HasStarted) 
+                if (!response.HasStarted)
                 {
                     response.ContentType = "application/json";
                     response.StatusCode = (int)statusCode;

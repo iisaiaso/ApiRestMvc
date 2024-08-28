@@ -1,7 +1,7 @@
-﻿using ApiMvc.Models;
-using ApiMvc.Models.Cores.Model;
+﻿using ApiMvc.Models.Cores.Model;
+using ApiMvc.Service.Dtos.Productos;
 
-namespace ApiMvc.Service.Dtos.Fabricante
+namespace ApiMvc.Service.Dtos.Fabricantes
 {
     public class FabricanteDto : CoreModel
     {

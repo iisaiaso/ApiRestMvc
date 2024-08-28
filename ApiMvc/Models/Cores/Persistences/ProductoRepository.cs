@@ -18,10 +18,13 @@ namespace ApiMvc.Models.Cores.Persistences
         //    _context = context;
         //}
 
-        //public async Task<IReadOnlyList<Producto>> FindAllAsync()
-        //{
-        //    return await  _context.Producto.ToListAsync();
-        //}
+        public override async Task<IReadOnlyList<Producto>> FindAllAsync()
+        {
+            return await  _dbContext.Set<Producto>()
+                .Include(p => p.Fabricante)
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
         public override async Task<Producto?> FindByIdAsync(int id)
         {
@@ -30,17 +33,18 @@ namespace ApiMvc.Models.Cores.Persistences
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        //public async Task<Producto> SaveAsync(Producto producto)
-        //{
-        //    EntityState state = _context.Entry(producto).State;
-        //    _ = state switch
-        //    {
-        //        EntityState.Detached => _context.Product.Add(producto),
-        //        EntityState.Modified => _context.Product.Update(producto),
-        //    };
-        //    await _context.SaveChangesAsync();
-        //    return producto;
-        //}
+        public override async Task<Producto> SaveAsync(Producto entity)
+        {
+            EntityState state = _dbContext.Entry(entity).State;
+            _ = state switch
+            {
+                EntityState.Detached => _dbContext.Set<Producto>().Add(entity),
+                EntityState.Modified => _dbContext.Set<Producto>().Update(entity),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            await _dbContext.SaveChangesAsync();
+            return await FindByIdAsync(entity.Id) ?? entity;
+        }
 
         //public async Task<Producto> DeleteAsync(int id)
         //{

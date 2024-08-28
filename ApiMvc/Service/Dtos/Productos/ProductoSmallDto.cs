@@ -1,6 +1,6 @@
 ﻿using ApiMvc.Models.Cores.Model;
 
-namespace ApiMvc.Models
+namespace ApiMvc.Service.Dtos.Productos
 {
     public class ProductoSmallDto : CoreModel
     {

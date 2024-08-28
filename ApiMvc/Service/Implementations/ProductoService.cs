@@ -1,35 +1,30 @@
-﻿using ApiMvc.Models;
-using ApiMvc.Models.Contracts;
+﻿using ApiMvc.Models.Contracts;
 using ApiMvc.Models.Entity;
 using ApiMvc.Service.Cores.Exceptions;
-using ApiMvc.Service.Dtos.Fabricante;
-using ApiMvc.Service.Dtos.Producto;
+using ApiMvc.Service.Dtos.Productos;
+using AutoMapper;
 
 namespace ApiMvc.Service.Implementations
 {
     public class ProductoService : IProductoService
     {
         private readonly IProductoRepository _productoRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<ProductoService> _logger;
 
-        public ProductoService(IProductoRepository productoRepository)
+        public ProductoService(IProductoRepository productoRepository, IMapper mapper, ILogger<ProductoService> logger)
         {
             _productoRepository = productoRepository;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IReadOnlyList<ProductoSmallDto>> FindAllAsync()
         {
             // Obtener todos los productos desde el repositorio
-            var productos = await _productoRepository.FindAllAsync();
+            IReadOnlyList<Producto> productos = await _productoRepository.FindAllAsync();
 
-            // Convertir productos a ProductoSmallDto
-            var productoSmallDto = productos.Select(p => new ProductoSmallDto
-            {
-                Id = p.Id,
-                Nombre = p.Nombre,
-                // Agrega aquí las propiedades que necesites mapear
-            }).ToList(); // Convertir a List para que coincida con IReadOnlyList
-
-            return productoSmallDto;
+            return _mapper.Map<IReadOnlyList<ProductoSmallDto>>(productos);
         }
 
         public async Task<ProductoDto> FindByIdAsync(int id)
@@ -37,61 +32,25 @@ namespace ApiMvc.Service.Implementations
             // Obtener el producto desde el repositorio
             Producto? producto = await _productoRepository.FindByIdAsync(id);
 
-            if (producto is null) throw ProductoNotFound(id);
-
-            // Mapear Producto a ProductoDto
-            ProductoDto productoDto = new ProductoDto
+            if (producto is null)
             {
-                Id = producto.Id,
-                Nombre = producto.Nombre,
-                Precio = producto.Precio,
-                FabricanteId = producto.FabricanteId,
-                Fabricante = producto.Fabricante == null ? null : new FabricanteSmallDto
-                {
-                    Id = producto.Fabricante.Id,
-                    Nombre = producto.Fabricante.Nombre
-                    // Mapear más propiedades si es necesario
-                }
-                // Mapea aquí todas las propiedades necesarias para ProductoDto
-            };
+               // _logger.LogWarning("Producnto no encontrado para el id:" + id);
+                throw ProductoNotFound(id);
+            }
 
-            return productoDto;
+            _logger.LogInformation("Producto {nombre}" + producto.Nombre);
+            return _mapper.Map<ProductoDto>(producto);
         }
 
         public async Task<ProductoDto> CreateAsync(ProductoSaveDto saveDto)
         {
             // Crear una nueva instancia de Producto y asignar propiedades desde saveDto
-            Producto producto = new Producto
-            {
-                Nombre = saveDto.Nombre,
-                Precio = saveDto.Precio,
-                FabricanteId = saveDto.FabricanteId
-                // Asigna aquí todas las demás propiedades que necesites
-            };
+            Producto producto = _mapper.Map<Producto>(saveDto);
 
             // Guardar el producto utilizando el repositorio
-            Producto savedProducto = await _productoRepository.SaveAsync(producto);
+            await _productoRepository.SaveAsync(producto);
 
-            Producto? findProduct = await _productoRepository.FindByIdAsync(savedProducto.Id);
-
-            if (findProduct is null) throw ProductoNotFound(savedProducto.Id);
-
-            // Mapear Producto a ProductoDto manualmente
-            ProductoDto productoDto = new ProductoDto
-            {
-                Id = findProduct.Id,
-                Nombre = findProduct.Nombre,
-                Precio = findProduct.Precio,
-                FabricanteId = findProduct.FabricanteId,
-                Fabricante = findProduct.Fabricante == null ? null : new FabricanteSmallDto
-                {
-                    Id = findProduct.Fabricante.Id,
-                    Nombre = findProduct.Fabricante.Nombre
-                }
-                // Asigna aquí todas las demás propiedades que necesites mapear
-            };
-
-            return productoDto;
+            return _mapper.Map<ProductoDto>(producto);
         }
 
         public async Task<ProductoSmallDto> EditAsync(int id, ProductoSaveDto saveDto)
@@ -101,24 +60,12 @@ namespace ApiMvc.Service.Implementations
 
             if (producto is null) throw ProductoNotFound(id);
 
-            // Actualizar las propiedades del producto con los datos de saveDto
-            producto.Nombre = saveDto.Nombre;
-            producto.Precio = saveDto.Precio;
-            producto.FabricanteId = saveDto.FabricanteId;
-            // Agrega aquí todas las propiedades que necesites actualizar
+            _mapper.Map<ProductoSaveDto, Producto>(saveDto, producto);
 
             // Guardar los cambios
-            await _productoRepository.SaveAsync(producto);  // Asume que tienes un método UpdateAsync en el repositorio
+            await _productoRepository.SaveAsync(producto);  
 
-            // Mapear Producto a ProductoSmallDto manualmente
-            ProductoSmallDto productoSmallDto = new ProductoSmallDto
-            {
-                Id = producto.Id,
-                Nombre = producto.Nombre,
-                // Mapea aquí todas las propiedades necesarias para ProductoSmallDto
-            };
-
-            return productoSmallDto;
+            return _mapper.Map<ProductoSmallDto>(producto);
         }
 
         public async Task<ProductoSmallDto> DisableAsync(int id)
@@ -128,15 +75,7 @@ namespace ApiMvc.Service.Implementations
 
             if (deletedProducto is null) throw ProductoNotFound(id);
 
-            // Mapear Producto a ProductoSmallDto manualmente
-            ProductoSmallDto productoSmallDto = new ProductoSmallDto
-            {
-                Id = deletedProducto.Id,
-                Nombre = deletedProducto.Nombre,
-                // Mapea aquí todas las propiedades necesarias para ProductoSmallDto
-            };
-
-            return productoSmallDto;
+            return _mapper.Map<ProductoSmallDto>(deletedProducto);
         }
 
         private NotFoundCoreException ProductoNotFound(int id)

@@ -1,4 +1,4 @@
-﻿namespace ApiMvc.Service.Dtos.Fabricante
+﻿namespace ApiMvc.Service.Dtos.Fabricantes
 {
     public class FabricanteSaveDto
     {

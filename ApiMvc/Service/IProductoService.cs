@@ -1,7 +1,5 @@
-﻿
-using ApiMvc.Models;
-using ApiMvc.Service.Cores.Services;
-using ApiMvc.Service.Dtos.Producto;
+﻿using ApiMvc.Service.Cores.Services;
+using ApiMvc.Service.Dtos.Productos;
 
 namespace ApiMvc.Service
 {
