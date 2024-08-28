@@ -51,15 +51,9 @@ namespace ApiMvc.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProductoDto))]
-        public async Task<IResult> Post([FromBody] ProductoSaveDto saveDto)
+        public async Task<ProductoDto> Post([FromBody] ProductoSaveDto saveDto)
         {
-            if (!ModelState.IsValid)
-            {
-                var rs = ModelState.Where(x => x.Value?.Errors.Count() > 0).ToArray();
-                return Results.BadRequest(rs);
-            }
-            var respose = await _productoService.CreateAsync(saveDto);
-            return Results.Ok(respose);
+            return await _productoService.CreateAsync(saveDto);
         }
 
         // DELETE: api/Productoes/5

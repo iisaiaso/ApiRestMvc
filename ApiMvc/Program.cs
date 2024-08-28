@@ -1,3 +1,4 @@
+using ApiMvc.Controllers.Filters;
 using ApiMvc.Controllers.Middlewares;
 using ApiMvc.Models.Cores.Context;
 using ApiMvc.Service.Cores.Context;
@@ -6,12 +7,13 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new ValidationFilter());
+}).ConfigureApiBehaviorOptions(options =>
 {
     options.SuppressModelStateInvalidFilter = true; // Agregar esto para desabilitar la validación automática
 });
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
