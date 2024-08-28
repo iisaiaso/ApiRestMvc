@@ -4,7 +4,7 @@ namespace ApiMvc.Models.Entity
 {
     public class Producto : CoreModel
     {
-        public string Nombre { get; set; } = string.Empty; // Se inicializa 'Nombre' con una cadena vacía y se pone string? si sea null
+        public string Nombre { get; set; } = default!; // Se inicializa 'Nombre' con una cadena vacía y se pone string? si sea null
         public double Precio { get; set; }
         public int FabricanteId { get; set; }
 

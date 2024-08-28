@@ -28,5 +28,10 @@ namespace ApiMvc.Models.Cores.Context
             // Registrar todas las entidades en el ensamblado actual
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
+
+        //public DbSet<Producto> Producto { get; set; }
+        //public DbSet<Fabricante> Fabricante { get; set; }
+
+        public DbSet<ApiMvc.Service.Dtos.Fabricante.FabricanteDto> FabricanteDto { get; set; } = default!;
     }
 }

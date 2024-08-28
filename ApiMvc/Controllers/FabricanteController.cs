@@ -20,7 +20,7 @@ namespace ApiMvc.Controllers
         // GET: api/FabricanteDtoes
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteSmallDto))]
-        public async Task<IEnumerable<FabricanteSmallDto>> GetFabricante()
+        public async Task<IEnumerable<FabricanteSmallDto>> Get()
         {
             return await _fabricanteService.FindAllAsync();
         }
@@ -29,7 +29,7 @@ namespace ApiMvc.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
-        public async Task<Results<NotFound,Ok<FabricanteDto>>> GetFabricante(int id)
+        public async Task<Results<NotFound,Ok<FabricanteDto>>> Get(int id)
         {
             var response = await _fabricanteService.FindByIdAsync(id);
             return TypedResults.Ok(response);
