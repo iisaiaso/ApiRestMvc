@@ -2,6 +2,9 @@ using ApiMvc.Controllers.Filters;
 using ApiMvc.Controllers.Middlewares;
 using ApiMvc.Models.Cores.Context;
 using ApiMvc.Service.Cores.Context;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
@@ -32,11 +35,19 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Autofac
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(options =>
+    {
+        options.RegisterModule(new DataAccesAutofacModule());
+        options.RegisterModule(new BusinessLogicAutofacModule());
+    });
+
 // DataAcces
-builder.Services.addDataAcces(builder.Configuration, Assembly.GetExecutingAssembly());
+builder.Services.addDataAcces(builder.Configuration);
 
 // Business Logic
-builder.Services.addBusinessLogic(Assembly.GetExecutingAssembly());
+builder.Services.addBusinessLogic();
 
 // API Exception 
 builder.Services.AddTransient<ExceptionMiddleware>();
