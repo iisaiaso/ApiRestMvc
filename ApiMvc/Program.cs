@@ -4,6 +4,7 @@ using ApiMvc.Models.Cores.Context;
 using ApiMvc.Service.Cores.Context;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Serilog;
 using Serilog.Events;
@@ -48,6 +49,10 @@ builder.Services.addDataAcces(builder.Configuration);
 
 // Business Logic
 builder.Services.addBusinessLogic();
+
+
+// Validators
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 // API Exception 
 builder.Services.AddTransient<ExceptionMiddleware>();

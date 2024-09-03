@@ -17,7 +17,7 @@ namespace ApiMvc.Controllers
             _fabricanteService = fabricanteService;
         }
 
-        // GET: api/FabricanteDtoes
+        // GET: api/Fabricante
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteSmallDto))]
         public async Task<IEnumerable<FabricanteSmallDto>> Get()
@@ -25,7 +25,7 @@ namespace ApiMvc.Controllers
             return await _fabricanteService.FindAllAsync();
         }
 
-        // GET: api/FabricanteDtoes/5
+        // GET: api/Fabricante/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
@@ -34,5 +34,33 @@ namespace ApiMvc.Controllers
             var response = await _fabricanteService.FindByIdAsync(id);
             return TypedResults.Ok(response);
         }
+
+        // Post: api/Fabricante
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(FabricanteDto))]
+        public async Task<FabricanteDto> Post([FromBody] FabricanteSaveDto saveDto) 
+        {
+            return await _fabricanteService.CreateAsync(saveDto);
+        }
+
+        // Put: api/Fabricante/5
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FabricanteSmallDto))]
+        public async Task<Results<NotFound, Ok<FabricanteSmallDto>>> Put(int id, [FromBody] FabricanteSaveDto saveDto) 
+        {
+            var response = await _fabricanteService.EditAsync(id, saveDto);
+            return TypedResults.Ok(response);
+        }
+
+        // Delete: api/Fabricante/5
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorModel))]
+        public async Task<Results<NotFound, Ok<FabricanteSmallDto>>> Delete(int id) 
+        {
+            var response = await _fabricanteService.DisableAsync(id);
+            return TypedResults.Ok(response);
+        }
+
     }
 }

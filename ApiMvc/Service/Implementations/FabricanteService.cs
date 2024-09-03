@@ -2,7 +2,6 @@
 using ApiMvc.Models.Entity;
 using ApiMvc.Service.Cores.Exceptions;
 using ApiMvc.Service.Dtos.Fabricantes;
-using ApiMvc.Service.Dtos.Productos;
 using AutoMapper;
 
 namespace ApiMvc.Service.Implementations
@@ -18,6 +17,37 @@ namespace ApiMvc.Service.Implementations
             _fabricanteRepository = fabricanteRepository;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public async Task<FabricanteDto> CreateAsync(FabricanteSaveDto saveDto)
+        {
+            Fabricante fabricante = _mapper.Map<Fabricante>(saveDto);
+
+            await _fabricanteRepository.SaveAsync(fabricante);
+
+            return _mapper.Map<FabricanteDto>(fabricante);
+        }
+
+        public async Task<FabricanteSmallDto> DisableAsync(int id)
+        {
+            Fabricante? fabricante = await _fabricanteRepository.DeleteAsync(id);
+
+            if (fabricante == null) throw FabricanteNotFound(id);
+
+            return _mapper.Map<FabricanteSmallDto>(fabricante);
+        }
+
+        public async Task<FabricanteSmallDto> EditAsync(int id, FabricanteSaveDto saveDto)
+        {
+            Fabricante? fabricante = await _fabricanteRepository.FindByIdAsync(id);
+            
+            if(fabricante == null) throw FabricanteNotFound(id);
+
+            _mapper.Map<FabricanteSaveDto, Fabricante>(saveDto, fabricante);
+
+            await _fabricanteRepository.SaveAsync(fabricante);
+
+            return _mapper.Map<FabricanteSmallDto>(fabricante);
         }
 
         public async Task<IReadOnlyList<FabricanteSmallDto>> FindAllAsync()

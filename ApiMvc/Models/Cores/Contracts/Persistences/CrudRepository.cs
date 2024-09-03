@@ -1,5 +1,4 @@
 ﻿using ApiMvc.Models.Cores.Context;
-using ApiMvc.Models.Cores.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiMvc.Models.Cores.Contracts.Persistences

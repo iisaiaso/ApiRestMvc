@@ -1,5 +1,4 @@
-﻿using ApiMvc.Service.Dtos.Productos;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace ApiMvc.Service.Dtos.Productos.Validators
 {
@@ -9,7 +8,10 @@ namespace ApiMvc.Service.Dtos.Productos.Validators
         {
             RuleFor(x => x.Nombre)
                 .NotNull()
-                .NotEmpty();
+                .Length(1, 15).WithMessage("Name should be between 1 and 100 chars");
+
+            RuleFor(x => x.Precio)
+                .GreaterThan(0).WithMessage("Price must be greater than 0");
         }
     }
 }

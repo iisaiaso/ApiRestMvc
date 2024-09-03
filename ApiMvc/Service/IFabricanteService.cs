@@ -3,7 +3,7 @@ using ApiMvc.Service.Dtos.Fabricantes;
 
 namespace ApiMvc.Service
 {
-    public interface IFabricanteService : IQueryService<FabricanteDto, FabricanteSmallDto, int>
+    public interface IFabricanteService : ICrudService<FabricanteDto, FabricanteSaveDto, FabricanteSmallDto, int>
     {
     }
 }

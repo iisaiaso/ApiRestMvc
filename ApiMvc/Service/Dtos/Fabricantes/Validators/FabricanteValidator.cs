@@ -8,7 +8,7 @@ namespace ApiMvc.Service.Dtos.Fabricantes.Validators
         {
             RuleFor(x => x.Nombre)
                 .NotNull()
-                .NotEmpty();
+                .Length(1, 15).WithMessage("Name should be between 1 and 15 chars");
         }
     }
 }
